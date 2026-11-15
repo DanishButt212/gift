@@ -19,9 +19,10 @@ Gaana option/menu page aate hi shuru hota hai, **loop par chalta hai (poora song
 aur koi bhi option choose karne ya **Wapas** aane par nahi rukta — player main page par hai,
 option wale pages ke andar nahi.
 
-Playback official ARY Digital YouTube embed se hota hai
-(`https://www.youtube.com/watch?v=cX5YhkapzVk`), is liye is repo mein koi mp3 file
-upload nahi ki gayi hai.
+Gaana repo mein hi hai: `alvida.mp4` (13 MB, 640x360, poora official ARY Digital
+video — https://www.youtube.com/watch?v=cX5YhkapzVk). Page ka `<audio>` element
+usi ko loop par chalata hai. Agar `alvida.mp4` na chale to official YouTube
+embed fallback ke tor par chal jata hai.
 
-**Apni mp3 use karni ho to:** apni `alvida.mp3` file ko `Gift.html` ke saath isi
-folder mein rakh dein — page pehle usi ko chalayega, YouTube sirf fallback hai.
+Note: gaana ARY Digital ka copyrighted OST hai — public repo mein rakhne par
+DMCA takedown ka risk rehta hai.
