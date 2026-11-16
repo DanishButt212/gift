@@ -19,10 +19,10 @@ Gaana option/menu page aate hi shuru hota hai, **loop par chalta hai (poora song
 aur koi bhi option choose karne ya **Wapas** aane par nahi rukta — player main page par hai,
 option wale pages ke andar nahi.
 
-Gaana repo mein hi hai: `alvida.mp4` (13 MB, 640x360, poora official ARY Digital
-video — https://www.youtube.com/watch?v=cX5YhkapzVk). Page ka `<audio>` element
-usi ko loop par chalata hai. Agar `alvida.mp4` na chale to official YouTube
-embed fallback ke tor par chal jata hai.
+Gaana repo mein hi hai: `alvida.aac` (10.7 MB, ~5:23, Alvida Alvida — Nabeel Shaukat
+Ali, Dar-e-Nijaat OST). Page ka `<audio>` element usi ko loop par chalata hai.
+Agar `alvida.aac` na chale to official YouTube embed fallback ke tor par chal
+jata hai (https://www.youtube.com/watch?v=cX5YhkapzVk).
 
 Note: gaana ARY Digital ka copyrighted OST hai — public repo mein rakhne par
 DMCA takedown ka risk rehta hai.
