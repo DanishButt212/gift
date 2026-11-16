@@ -21,8 +21,7 @@ option wale pages ke andar nahi.
 
 Gaana repo mein hi hai: `alvida.aac` (10.7 MB, ~5:23, Alvida Alvida — Nabeel Shaukat
 Ali, Dar-e-Nijaat OST). Page ka `<audio>` element usi ko loop par chalata hai.
-Agar `alvida.aac` na chale to official YouTube embed fallback ke tor par chal
-jata hai (https://www.youtube.com/watch?v=cX5YhkapzVk).
+Gaana sirf `alvida.aac` se chalta hai, aur kisi bahari source se nahi.
 
 Note: gaana ARY Digital ka copyrighted OST hai — public repo mein rakhne par
 DMCA takedown ka risk rehta hai.

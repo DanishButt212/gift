@@ -121,7 +121,7 @@ header,.foot{opacity:0;transform:translateY(14px);transition:opacity 1.2s ease,t
 <div id="curtain"></div>
 <div id="splash"><div class="heart">💝</div><h2 id="spTitle"></h2><p id="spTap"></p></div>
 <audio id="song" loop preload="auto"></audio>
-<div id="ytWrap" aria-hidden="true" style="position:fixed;right:0;bottom:0;width:120px;height:68px;overflow:hidden;opacity:0.01;pointer-events:none;z-index:1"><div id="ytPlayer"></div></div><button id="musicBtn" type="button" aria-label="Gaana chalao" title="Gaana chalao" style="position:fixed;right:14px;bottom:14px;z-index:30;width:44px;height:44px;border-radius:50%;border:1px solid rgba(255,200,215,.5);background:rgba(30,8,22,.55);color:#ffe0e8;font-size:20px;line-height:1;cursor:pointer;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)">♪</button>
+<button id="musicBtn" type="button" aria-label="Gaana chalao / band karo" title="Gaana chalao / band karo" style="position:fixed;right:14px;bottom:14px;z-index:30;width:44px;height:44px;border-radius:50%;border:1px solid rgba(255,200,215,.5);background:rgba(30,8,22,.55);color:#ffe0e8;font-size:20px;line-height:1;cursor:pointer;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)">♪</button>
 <script type="text/plain" id="songData"><!--__SONG__--></script>
 
 <script>
@@ -771,101 +771,26 @@ rafId=requestAnimationFrame(frame);
 </script>
 
 <script>
-/* Alvida Alvida — YouTube fallback (official ARY Digital OST, poora song, loop)
-   FIX: pehle wale patch mein bug tha — agar YouTube API abhi load ho rahi hoti
-   to start ki request kho jati thi (koi pending flag nahi tha), aur player
-   banne ke baad bhi play nahi hota tha. Ab ytWant flag har gesture/error par
-   set hota hai aur player ready hote hi bajna shuru ho jata hai.
-   Player main page par hai, iframe wale option pages ke andar nahi — is liye
-   option choose karne ya Wapas aane par gaana nahi rukta. */
+/* Gaana — sirf repo ki alvida.aac
+   <audio id="song"> loop par alvida.aac chalata hai. Player main page par hai,
+   option pages ke andar nahi — is liye option choose karne ya Wapas aane par
+   gaana nahi rukta. Neeche right corner wala ♪ button sirf isi file ko
+   chalata / band karta hai. */
 (function(){
-  var YT_ID='cX5YhkapzVk'; /* ARY Digital official OST: Alvida Alvida — Nabeel Shaukat Ali & Osaf Fateh Ali Khan */
   var audio=document.getElementById('song');
-  var splash=document.getElementById('splash');
   var musicBtn=document.getElementById('musicBtn');
-  var ytPlayer=null, ytReady=false, ytStarted=false, ytWant=false, apiLoading=false, iframeFallbackDone=false;
-  function mp3Playing(){ return !!(audio && !audio.paused && audio.currentTime>0); }
-  function playYTNow(){
-    if(!ytPlayer || !ytReady || mp3Playing()) return false;
-    try{ ytPlayer.unMute(); ytPlayer.setVolume(100); ytPlayer.playVideo(); ytStarted=true; return true; }catch(e){ return false; }
-  }
-  function loadAPI(){
-    if(apiLoading || (window.YT && window.YT.Player)) return;
-    apiLoading=true;
-    var s=document.createElement('script'); s.src='https://www.youtube.com/iframe_api';
-    s.onerror=function(){ iframeFallback(); };
-    document.head.appendChild(s);
-    window.onYouTubeIframeAPIReady=function(){ ytReady=true; createPlayer(); };
-    var tries=0; var iv=setInterval(function(){
-      tries++;
-      if(window.YT && window.YT.Player){ clearInterval(iv); ytReady=true; createPlayer(); }
-      else if(tries>40){ clearInterval(iv); if(ytWant) iframeFallback(); }
-    },250);
-  }
-  function createPlayer(){
-    if(ytPlayer || !window.YT || !window.YT.Player) return;
-    ytPlayer=new YT.Player('ytPlayer',{
-      videoId:YT_ID,
-      playerVars:{autoplay:0,controls:0,disablekb:1,fs:0,loop:1,playlist:YT_ID,playsinline:1,rel:0},
-      events:{
-        onReady:function(){ ytReady=true; if(ytWant) playYTNow(); },
-        onStateChange:function(ev){
-          if(!window.YT) return;
-          if(ev.data===YT.PlayerState.PLAYING){
-            if(mp3Playing()){ try{ytPlayer.pauseVideo();}catch(e){} ytStarted=false; }
-            else ytStarted=true;
-          }
-          if(ev.data===YT.PlayerState.ENDED && !mp3Playing()){ try{ytPlayer.playVideo();}catch(e){} }
-          if(ev.data===YT.PlayerState.CUED && ytWant) playYTNow();
-        },
-        onError:function(){ if(ytWant) iframeFallback(); }
-      }
-    });
-    if(ytWant) setTimeout(playYTNow, 300);
-  }
-  /* Aakhri rasta: seedha YouTube embed iframe, gesture ke andar banaya jaye to autoplay chalta hai */
-  function iframeFallback(){
-    if(iframeFallbackDone || mp3Playing()) return;
-    iframeFallbackDone=true;
-    try{
-      var f=document.createElement('iframe');
-      f.src='https://www.youtube-nocookie.com/embed/'+YT_ID+'?autoplay=1&loop=1&playlist='+YT_ID+'&playsinline=1&rel=0';
-      f.allow='autoplay; encrypted-media; picture-in-picture';
-      f.setAttribute('allowfullscreen','');
-      f.style.cssText='position:fixed;right:0;bottom:0;width:120px;height:68px;border:0;opacity:0.01;pointer-events:none;z-index:1';
-      document.getElementById('ytWrap').appendChild(f);
-    }catch(e){}
-  }
-  function startYT(){
-    ytWant=true;
-    if(mp3Playing()) return;
-    if(ytPlayer && ytReady){ playYTNow(); return; }
-    if(window.YT && window.YT.Player){ createPlayer(); return; }
-    loadAPI();
-    /* API late aaye to bhi 3 sec mein dobara koshish karo — ytWant set hai, onReady khud play karega */
-    setTimeout(function(){ if(ytWant && !mp3Playing() && !ytStarted) iframeFallbackCheck(); }, 6000);
-  }
-  function iframeFallbackCheck(){
-    if(ytStarted || mp3Playing()) return;
-    if(!ytPlayer || !ytReady) iframeFallback();
-  }
-  /* API pehle se load karo taake tap tak player tayyar ho */
-  loadAPI();
-  if(audio){
-    audio.addEventListener('error',function(){ startYT(); });
-    audio.addEventListener('playing',function(){
-      if(ytPlayer && ytStarted){ try{ytPlayer.pauseVideo();}catch(e){} ytStarted=false; }
-    });
-  }
-  /* Splash tap = user gesture: foran start karo, 900ms wait nahi */
-  if(splash){ splash.addEventListener('click',function(){ startYT(); }); }
-  if(musicBtn){ musicBtn.addEventListener('click',function(e){ e.stopPropagation(); startYT(); if(audio && audio.paused){ try{audio.play();}catch(err){} } }); }
+  function playSong(){ if(audio){ try{ var pr=audio.play(); if(pr&&pr.catch) pr.catch(function(){}); }catch(e){} } }
+  if(musicBtn){ musicBtn.addEventListener('click',function(e){
+    e.stopPropagation();
+    if(!audio) return;
+    if(audio.paused){ playSong(); }
+    else { try{ audio.pause(); }catch(err){} }
+  }); }
   document.addEventListener('pointerdown',function(){
-    if(!ytStarted && !mp3Playing()) startYT();
-    else if(ytStarted && ytPlayer && ytPlayer.getPlayerState && ytPlayer.getPlayerState()===YT.PlayerState.PAUSED) startYT();
+    if(audio && audio.paused && audio.currentTime>0){ playSong(); }
   });
   document.addEventListener('visibilitychange',function(){
-    if(!document.hidden && ytStarted && ytPlayer && ytPlayer.getPlayerState && ytPlayer.getPlayerState()===YT.PlayerState.PAUSED) startYT();
+    if(!document.hidden && audio && audio.paused && audio.currentTime>0){ playSong(); }
   });
 })();
 </script>
