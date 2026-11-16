@@ -780,12 +780,15 @@ rafId=requestAnimationFrame(frame);
   var audio=document.getElementById('song');
   var musicBtn=document.getElementById('musicBtn');
   function playSong(){ if(audio){ try{ var pr=audio.play(); if(pr&&pr.catch) pr.catch(function(){}); }catch(e){} } }
+  function syncBtn(){ if(musicBtn){ musicBtn.textContent = (audio && !audio.paused) ? '\u275A\u275A' : '\u266A'; musicBtn.setAttribute('aria-label', (audio && !audio.paused) ? 'Gaana band karo' : 'Gaana chalao'); } }
   if(musicBtn){ musicBtn.addEventListener('click',function(e){
     e.stopPropagation();
     if(!audio) return;
     if(audio.paused){ playSong(); }
     else { try{ audio.pause(); }catch(err){} }
+    syncBtn();
   }); }
+  if(audio){ audio.addEventListener('playing',syncBtn); audio.addEventListener('pause',syncBtn); }
   document.addEventListener('pointerdown',function(){
     if(audio && audio.paused && audio.currentTime>0){ playSong(); }
   });
